@@ -2,7 +2,7 @@ package java_src;
 
 import java.io.*;
 import java.util.*;
-public class G1_5430_AC {
+public class G5_5430_AC {
     public static void main(String args[]) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
