@@ -1,39 +1,41 @@
 package java_src;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
+class Point{
+    int x, y;
+
+    Point(int x, int y){
+        this.x= x;
+        this.y=y;
+    }
+}
 public class S1_2178_미로탐색 {
-    private static int[][] arr;
-    private static boolean[][] visit;
+    private static int[][] map;
+    private static boolean[][] visited;
     private static int N, M;
-    private static int cnt;
-    private static int min;
-    private static void bfs(int x, int y){
-        if(x == N-1 && y == M-1){
-            if(min<0 || cnt<min) min=cnt;
-            return;
-        }
+    private static int[] dx={-1, 1, 0, 0};
+    private static int[] dy={0, 0, -1,1};
 
-        if(x+1<N && arr[x+1][y]==1 && !visit[x+1][y]){
-            cnt++;
-            bfs(x + 1, y);
-        }
-        if(x>0 && arr[x-1][y]==1){
-            cnt++;
-            bfs(x -1, y);
-        }
-        if(y+1<M && arr[x][y+1]==1) {
-            cnt++;
-            bfs(x, y + 1);
-        }
-        if(y>0 && arr[x][y-1]==1) {
-            cnt++;
-            bfs(x, y - 1);
-        }
+    private static void bfs(){
+        Queue<Point> q = new LinkedList<>();
+        q.offer(new Point(0, 0));
+        visited[0][0]=true;
 
+        while(!q.isEmpty()){
+            Point next = q.poll();
+            for(int i=0;i<4;i++){
+                int nextX = next.x + dx[i];
+                int nextY = next.y + dy[i];
+
+                if(nextX<0 || nextY<0 || nextX>=N || nextY>=M || visited[nextX][nextY] || map[nextX][nextY]==0) continue;
+
+                q.offer(new Point(nextX, nextY));
+                visited[nextX][nextY]=true;
+                map[nextX][nextY] = map[next.x][next.y]+1;
+            }
+        }
     }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -42,17 +44,15 @@ public class S1_2178_미로탐색 {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        arr = new int[N][M];
+        map = new int[N][M];
         for(int i=0;i<N;i++){
             String in = br.readLine();
             for (int j = 0; j < M; j++)
-                arr[i][j] = Integer.parseInt(in.charAt(j)+"");
+                map[i][j] = Integer.parseInt(in.charAt(j)+"");
         }
 
-        cnt=1;
-        min=-1;
-        visit = new boolean[N][M];
-        bfs(0,0);
-        System.out.println(min);
+        visited = new boolean[N][M];
+        bfs();
+        System.out.println(map[N-1][M-1]);
     }
 }
